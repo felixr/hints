@@ -5,6 +5,9 @@ local naughty   = require("naughty")
 local pairs     = pairs
 local beautiful = require("beautiful")
 local wibox     = require("wibox")
+local capi = {
+    widget = widget,
+}
 
 module("hints")
 
@@ -24,13 +27,12 @@ function init()
     local char = charorder:sub(i,i)
     hintbox[char] = wibox({fg=beautiful.fg_normal, bg=beautiful.bg_focus, border_color=beautiful.border_focus, border_width=beautiful.border_width})
     hintbox[char].ontop = true
-    hintbox[char].width = hintsize
+    hintbox[char].width = hintsize * 0.6
     hintbox[char].height = hintsize
-    letterbox[char] = wibox.widget.textbox()
-    letterbox[char]:set_markup("<span color=\"" .. beautiful.fg_normal .. "\"" .. ">" .. char.upper(char) .. "</span>")
-    letterbox[char]:set_font("dejavu sans mono 40")
-    letterbox[char]:set_align("center")
-    hintbox[char]:set_widget(letterbox[char])
+    letterbox[char] = capi.widget({type = "textbox", align="right"})
+    letterbox[char].width = hintsize
+    letterbox[char].text = '<span font="DejaVu Sans Mono 40" color="' .. beautiful.fg_normal .. "\"" .. ">" .. char.upper(char) .. "</span>"
+    hintbox[char].widgets = {letterbox[char]}
   end
 end
 
